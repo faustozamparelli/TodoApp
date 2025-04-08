@@ -113,87 +113,129 @@
   }
 </script>
 
-<h1>MINIMAL TODO APP</h1>
-<input
-  type="text"
-  placeholder="Enter a todo"
-  bind:value={$todoText}
-  on:keydown={(e) => e.key === "Enter" && addTodo()}
-/>
-<div>
-  {#each $todos.global as { text, completed }, index}
-    <div class="todo">
-      <p class:completed on:click={() => toggleTodo("global", index)}>{text}</p>
-      <button class="delete" on:click={() => deleteTodo("global", index)}
-        >×</button
-      >
+<div class="app-container">
+  <div class="content">
+    <h1>MINIMAL TODO APP</h1>
+    <input
+      type="text"
+      placeholder="Enter a todo"
+      bind:value={$todoText}
+      on:keydown={(e) => e.key === "Enter" && addTodo()}
+    />
+    <div>
+      {#each $todos.global as { text, completed }, index}
+        <div class="todo">
+          <p class:completed on:click={() => toggleTodo("global", index)}>{text}</p>
+          <button class="delete" on:click={() => deleteTodo("global", index)}
+            >×</button
+          >
+        </div>
+      {/each}
     </div>
-  {/each}
-</div>
 
-{#each Object.keys($todos).filter((key) => key !== "global") as category}
-  <div>
-    <h1>{category}</h1>
-    {#each $todos[category] as { text, completed }, index}
-      <div class="todo">
-        <p class:completed on:click={() => toggleTodo(category, index)}>
-          {text}
-        </p>
-        <button on:click={() => deleteTodo(category, index)}>×</button>
+    {#each Object.keys($todos).filter((key) => key !== "global") as category}
+      <div>
+        <h1 class="category">{category}</h1>
+        {#each $todos[category] as { text, completed }, index}
+          <div class="todo">
+            <p class:completed on:click={() => toggleTodo(category, index)}>
+              {text}
+            </p>
+            <button class="delete" on:click={() => deleteTodo(category, index)}>×</button>
+          </div>
+        {/each}
       </div>
     {/each}
-  </div>
-{/each}
 
-{#if showPopup}
-  <div class="popup">
-    <h5>Welcome! Just start typing your todos above...</h5>
-    <h5>
-      In case you want to add categories, start your todo with an exclamation
-      mark !, like this:
-    </h5>
-    <h5>!school finish history page 121/127</h5>
+    {#if showPopup}
+      <div class="popup">
+        <h5>Welcome! Just start typing your todos above...</h5>
+        <h5>
+          In case you want to add categories, start your todo with an exclamation
+          mark !, like this:
+        </h5>
+        <h5>!school finish history page 121/127</h5>
+      </div>
+      <button class="close" on:click={closePopup}>Close</button>
+    {/if}
   </div>
-  <button class="close" on:click={closePopup}>Close</button>
-{/if}
 
-<footer>
-  <h6 class="by">Provided by Fausto Zamparelli</h6>
-</footer>
+  <footer>
+    <h6 class="by">Provided by Fausto Zamparelli</h6>
+  </footer>
+</div>
 
 <style>
   :global(body) {
     background-color: #000000;
     color: #ffffff;
-    display: grid;
-    place-items: center;
     font-family: "SF Pro Mono";
     font-size: 180%;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
   }
+  
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  h1 {
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+  
+  h1.category {
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+  
   input {
     font-size: 80%;
+    margin-bottom: 3.5rem;
   }
+  
   div {
     display: grid;
     place-items: center;
     font-size: 100%;
   }
+  
   div.todo {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 0;
+    margin-bottom: 2.5rem;
+    line-height: 1;
   }
+  
   p {
-    margin-right: 10px;
+    margin: 0;  
     cursor: pointer;
   }
+  
   p:hover {
     color: #cccccc;
   }
+  
   p.completed {
     text-decoration: line-through;
     color: #cccccc;
   }
+  
   button {
     cursor: pointer;
     background-color: #000000;
@@ -201,34 +243,40 @@
     border: 0.5px solid #ffffff;
     border-radius: 10%;
     font-size: 70%;
+    margin-left: 10px;
+    padding: 10;
   }
+  
   button.delete {
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
+    border-radius: 35%;
     display: flex;
+    font-size: 1.4rem;
     justify-content: center;
     align-items: center;
+    width: 18px;
+    height: 18px;
+    padding: 0;
   }
+  
   button:hover {
     background-color: #ffffff;
     color: #000000;
   }
+  
   footer {
-    position: absolute;
-    bottom: 0;
     color: #706969;
     text-align: center;
-    margin-bottom: 20px;
+    padding: 20px 0;
+    margin-top: auto;
   }
-  h6,
-  h5 {
+  
+  h6, h5 {
     margin: 1ex;
     font-weight: lighter;
   }
+  
   div.popup {
     margin-top: 10px;
     margin-bottom: 10px;
   }
 </style>
-
